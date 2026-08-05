@@ -1,10 +1,12 @@
 Declaración de uso de Inteligencia Artificial
 Challenge 03 — Inteligencia Geo-Temporal y de Redes (TechLogistics S.A.)
-Integrante: Camilo (Fase 1 — Data Understanding y Geo-Visualización)
-Herramienta usada: Claude (Anthropic), como apoyo durante la construcción del notebook de la Fase 1 y la definición de la estructura del repositorio.
+Integrante: Camilo (Fase 1 — Data Understanding y Geo-Visualización) y Samuel (Fase 2 — Procesamiento de Señales y Filtrado)
+Herramienta usada: Claude (Anthropic) para la Fase 1 y la definición de la estructura del repositorio; opencode para la Fase 2.
 
 Resumen
 Usé IA generativa como apoyo en dos frentes: (1) definir la estructura del repositorio siguiendo la plantilla usada en el Challenge 02 del curso, y (2) construir el notebook de la Fase 1 (exploración geoespacial y estacionariedad) contrastando cada resultado contra los CSV reales del proyecto. En más de un punto, correr el código generado contra los datos reales o simplemente mirar la visualización resultante sacó a la luz errores de razonamiento que no eran evidentes leyendo el código a simple vista (detallados en la sección "Auditoría y corrección de errores" más abajo) — esa verificación fue mía, no algo que la IA hiciera de forma autónoma.
+
+En la Fase 2 (Samuel) el uso fue más puntual, en cuatro frentes: planeación de la fase, documentación del notebook, buena escritura de las conclusiones y algunas partes de código. La verificación de los resultados (ejecutar el notebook completo y revisar que los números coincidieran con lo escrito) también fue manual, igual que en la Fase 1. Los detalles están en la sección "Fase 2 — Procesamiento de Señales y Filtrado" más abajo.
 
 Contexto que se le dio a la IA
 Se compartieron el enunciado del Challenge 03, el checklist de entrega, el diccionario de datos oficial (con la descripción de cada variable Agro_* y Ener_*, incluyendo qué series se esperaban estacionarias y cuáles no), y los 4 CSV reales del proyecto (agro_clean.csv, agro_noise.csv, ener_clean.csv, ener_noise.csv), para que el código y las conclusiones se ajustaran a los datos reales y no a supuestos genéricos.
@@ -36,6 +38,33 @@ Lectura visual engañosa por escala: al graficar las medias móviles de las 6 se
 Métrica no decisiva presentada como evidencia: el ratio "tendencia/ruido" calculado para desambiguar los casos de ADF/KPSS contradictorio se probó contra los datos reales y resultó similar en las 6 series (no separaba nada); se corrigió el texto para no presentarlo como parte de la evidencia que sustenta la clasificación final.
 
 Esta verificación —contrastar cada resultado generado contra los datos reales, el diccionario de datos, o la visualización correspondiente— fue un paso manual mío en cada entrega, no una garantía automática de la IA.
+
+## Fase 2 — Procesamiento de Señales y Filtrado
+
+En la Fase 2 el apoyo de la IA fue más puntual que en la Fase 1, en cuatro frentes:
+
+- **Planeación:** definí junto con la IA el enfoque de la fase (análisis espectral con FFT/PSD y
+  espectrogramas, y filtrado pasa-bajo con Butterworth) contrastado contra el checklist de entrega,
+  y el alcance de cada tarea antes de escribir código.
+- **Documentación:** la IA redactó las celdas Markdown del notebook y las respuestas a las
+  Tareas 3 y 4, que luego ajusté para que quedaran en mi tono y reflejaran mi análisis.
+- **Buena escritura:** revisión de redacción y consistencia de las conclusiones (por ejemplo,
+  corregir una interpretación de coeficientes que contradecía sus propios números).
+- **Algunas cosas de código:** FFT/PSD (Welch), espectrogramas STFT, filtro Butterworth con
+  `filtfilt`, RMSE de reconstrucción, pronóstico AR one-step-ahead y comparación de coeficientes
+  AR(2) entre las versiones clean, ruidosa y filtrada.
+
+### Decisiones tomadas por mí
+Las decisiones técnicas relevantes las tomé yo: por ejemplo, tras ver los trade-offs que la IA me
+presentó (distintos cutoff para el Butterworth), elegí el cutoff = 0.15 porque mejoraba el error de
+pronóstico manteniendo la varianza de la serie original, aun sabiendo que distorsiona la estimación
+de los coeficientes AR(2).
+
+### Auditoría y verificación
+- Verifiqué la ejecución completa del notebook contra los datos reales y contra los resultados ya
+  validados de la Fase 1 (las salidas de la Fase 1 se restauraron intactas tras la re-ejecución).
+- Detecté y corregí, con la IA, una conclusión de la comparación de coeficientes que contradecía
+  sus propios datos (el MAE global promediaba `const` con los lags, en escalas distintas).
 
 Formato general
 "Guíate de la estructura que utilizamos en otros chats pero aplicada a este caso" (repositorio y README).

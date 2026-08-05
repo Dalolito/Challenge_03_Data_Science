@@ -18,7 +18,7 @@ El proyecto sigue una metodología CRISP-DM organizada en 4 fases:
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1. Data Understanding y Geo-Visualización | Exploración geoespacial (NDVI/Humedad) + Estacionariedad (ADF/KPSS) | ✅ Completa |
-| 2. Procesamiento de Señales | FFT, espectrogramas, filtro Butterworth | ⏳ Pendiente |
+| 2. Procesamiento de Señales | FFT, espectrogramas, filtro Butterworth | ✅ Completa |
 | 3. Análisis de Grafos | Grafo de sensores/subestaciones, centralidades | ⏳ Pendiente |
 | 4. Modelado y Decisión | Granger, recomendación hídrica, ARIMAX | ⏳ Pendiente |
 
@@ -35,7 +35,7 @@ Challenge_03_Data_Science/
 │   └── processed/                     # Series filtradas, diferenciadas, grafo exportado
 │
 ├── notebooks/
-│   └── challenge03_fase1.ipynb        # Fase 1: geo-visualización + estacionariedad
+│   └── challenge03.ipynb              # Notebook único (Fases 1 y 2: geo, estacionariedad, FFT, filtrado)
 │
 ├── src/
 │   ├── __init__.py
@@ -70,12 +70,12 @@ ruido gaussiano inyectado, SNR entre 5-12dB):
   (`Ener_1-3`), generación eólica (`Ener_4`), factores macro (`Ener_5-7`),
   calidad de potencia (`Ener_8-10`), más geolocalización de subestaciones.
 
-## 4. Cómo reproducir la Fase 1
+## 4. Cómo reproducir el notebook
 
 ```bash
 pip install -r requirements.txt
 cd notebooks
-jupyter nbconvert --to notebook --execute --inplace challenge03_fase1.ipynb
+jupyter nbconvert --to notebook --execute --inplace challenge03.ipynb
 ```
 
 El notebook lee los CSV desde `../data/raw/` con rutas relativas, así que debe
@@ -109,13 +109,38 @@ ejecutarse desde dentro de `notebooks/`.
 - Esta clasificación debe usarse en las Fases 2-4: diferenciar `Ener_1-3` y
   `Ener_5-7` antes de correlación de Pearson o modelos ARIMA/ARIMAX.
 
-## 6. Equipo
+## 6. Hallazgos de la Fase 2 (Samuel)
+
+### Tarea 3 — Análisis Espectral (FFT) y Espectrogramas
+- Supuestos de muestreo: `fs=1`, frecuencias en ciclos/muestra (Nyquist = 0.5).
+- PSD (Welch) sobre `Ener_4` (generación eólica) en versión clean vs noise: la
+  señal concentra ~100% de su potencia en la banda baja [0, 0.05), mientras que
+  el ruido inyectado es de banda ancha (~61% de la potencia del residual está en
+  [0.2, 0.5)).
+- SNR estimado de `Ener_4` ≈ 8.5 dB, dentro del rango inyectado (5-12 dB).
+- Los espectrogramas (STFT, ventana Hann 256, 50% solapamiento) confirman que la
+  banda de ruido es la alta, separada del contenido espectral de la señal.
+
+### Tarea 4 — Filtrado y Reconstrucción
+- Butterworth pasa-bajo de orden 4 con cutoff = 0.15 ciclos/muestra, aplicado con
+  `filtfilt` (fase cero) sobre `Agro_3_noise` (Humedad Relativa).
+- RMSE de reconstrucción contra la original: 3.34 (ruidosa) → 1.85 (filtrada),
+  una reducción de ~45%. La serie filtrada conserva la varianza (std 11.61 vs
+  11.56).
+- Pronóstico AR one-step-ahead: la filtrada supera a la ruidosa en todos los
+  órdenes probados (AR(1): 4.53 → 0.82, AR(2): 3.98 → 2.15, AR(3): 3.73 → 2.41).
+- Coeficientes AR(2): hallazgo mixto — la ruidosa queda casi igual a la clean
+  (~-4% a -5% en los lags), mientras la filtrada infla Lag1 (+248%) y cambia el
+  signo de Lag2. El filtrado mejora el error de pronóstico, pero no recupera los
+  coeficientes estructurales del modelo.
+
+## 7. Equipo
 
 
-## 7. Declaración de uso de IA
+## 8. Declaración de uso de IA
 
 Ver [`docs/declaracion_uso_IA.md`](docs/declaracion_uso_IA.md).
 
-## 8. Plazo de entrega
+## 9. Plazo de entrega
 
 07 de febrero de 2026 (23:59 COT).
