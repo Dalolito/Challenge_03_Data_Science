@@ -1,0 +1,11 @@
+Variable,ADF_stat,ADF_p,ADF_conclusion,KPSS_stat,KPSS_p,KPSS_conclusion,Coinciden
+Ener_1,-1.8669,0.3478,No Estacionaria,0.3836,0.0842,Estacionaria,False
+Ener_2,-1.4791,0.5438,No Estacionaria,0.3701,0.09,Estacionaria,False
+Ener_3,-1.9284,0.3188,No Estacionaria,0.3735,0.0886,Estacionaria,False
+Ener_4,-8418193138.7768,0.0,Estacionaria,0.0684,0.1,Estacionaria,True
+Ener_5,-0.3477,0.9185,No Estacionaria,6.9235,0.01,No Estacionaria,True
+Ener_6,0.9527,0.9937,No Estacionaria,6.987,0.01,No Estacionaria,True
+Ener_7,-0.4244,0.9059,No Estacionaria,7.0007,0.01,No Estacionaria,True
+Ener_8,-46.0363,0.0,Estacionaria,0.0489,0.1,Estacionaria,True
+Ener_9,-45.3582,0.0,Estacionaria,0.0438,0.1,Estacionaria,True
+Ener_10,-43.7151,0.0,Estacionaria,0.1114,0.1,Estacionaria,True
