@@ -3,6 +3,14 @@
 **TechLogistics S.A.** | Maestría en Ciencia de Datos - EAFIT | Periodo 2026-2
 Docente: Jorge Iván Padilla-Buriticá
 
+**Integrantes del equipo:**
+
+| Nombre completo | Cédula |
+| --- | --- |
+| Samuel Gutiérrez Jaramillo | 1036449975 |
+| David Lopera Londoño | 1011392448 |
+| Juan Diego Acuña Giraldo | 1020222381 |
+
 ## 1. Descripción del proyecto
 
 TechLogistics S.A. (empresa ficticia) tiene dos redes de sensores georreferenciadas

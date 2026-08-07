@@ -1,6 +1,3 @@
-# Dependencias del Challenge 03 - Inteligencia Geo-Temporal y de Redes
-# Fase 1 (notebook challenge03_fase1.ipynb): pandas, numpy, plotly, statsmodels
-# Fases 2-4: scipy (filtro Butterworth), networkx (grafos/centralidad)
 numpy>=1.24
 pandas>=2.0
 plotly>=5.18
