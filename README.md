@@ -88,7 +88,7 @@ jupyter nbconvert --to notebook --execute --inplace challenge03.ipynb
 El notebook lee los CSV desde `../data/raw/` con rutas relativas, así que debe
 ejecutarse desde dentro de `notebooks/`.
 
-## 5. Hallazgos de la Fase 1 (Camilo)
+## 5. Hallazgos de la Fase 1 (David)
 
 ### Tarea 1 — Exploración Geo-Temporal
 - 14 sensores agroindustriales, sin nulos ni duplicados.
@@ -141,7 +141,7 @@ ejecutarse desde dentro de `notebooks/`.
   signo de Lag2. El filtrado mejora el error de pronóstico, pero no recupera los
   coeficientes estructurales del modelo.
 
-## 7. Hallazgos de la Fase 3 (David)
+## 7. Hallazgos de la Fase 3 (Juan Diego)
 
 ### Tarea 5 — Construcción de la Red de Sensores/Subestaciones
 - Grafos dirigidos por dataset (AGRO: 29 nodos/210 aristas; ENER: 70 nodos/865
@@ -159,7 +159,7 @@ ejecutarse desde dentro de `notebooks/`.
   concentra el 6.0% del tráfico total y alcanza el 98% de las subestaciones
   destino.
 
-## 8. Hallazgos de la Fase 4 (Juan Diego + equipo)
+## 8. Hallazgos de la Fase 4 (Equipo)
 
 ### P1 — Causalidad y Redes
 - Causalidad de Granger entre `Ener_10` (Factor de Potencia) y `Ener_9`
