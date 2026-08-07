@@ -31,6 +31,7 @@ en un único notebook (`notebooks/challenge03.ipynb`):
 | 3. Análisis de Grafos | Grafo de sensores/subestaciones, centralidades | ✅ Completa |
 | 4. Modelado y Decisión | Granger (P1), recomendación hídrica (P2), ARIMAX (P3) | ✅ Completa |
 
+Sumado a esto tenemos el documento correspondiente al informe técnico en donde concluimos las decisiones a tomar con los datos.
 ## 2. Estructura del repositorio
 
 ```
