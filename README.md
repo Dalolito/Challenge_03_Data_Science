@@ -1,6 +1,6 @@
 # Challenge 03: Inteligencia Geo-Temporal y de Redes
 
-**TechLogistics S.A.** | Maestría en Ciencia de Datos - EAFIT | Periodo 2026-2
+**TechLogistics S.A.** | Maestría en Ciencia de Datos - EAFIT | Periodo 2026-1
 Docente: Jorge Iván Padilla-Buriticá
 
 **Integrantes del equipo:**
@@ -21,14 +21,15 @@ Antioqueño) y una red eléctrica nacional. La junta directiva necesita entender
 2. Dónde se localizan los puntos críticos de calor (Geoespacial).
 3. Cuál es el pronóstico de carga (Series de Tiempo).
 
-El proyecto sigue una metodología CRISP-DM organizada en 4 fases:
+El proyecto sigue una metodología CRISP-DM organizada en 4 fases, todas resueltas
+en un único notebook (`notebooks/challenge03.ipynb`):
 
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1. Data Understanding y Geo-Visualización | Exploración geoespacial (NDVI/Humedad) + Estacionariedad (ADF/KPSS) | ✅ Completa |
 | 2. Procesamiento de Señales | FFT, espectrogramas, filtro Butterworth | ✅ Completa |
-| 3. Análisis de Grafos | Grafo de sensores/subestaciones, centralidades | ⏳ Pendiente |
-| 4. Modelado y Decisión | Granger, recomendación hídrica, ARIMAX | ⏳ Pendiente |
+| 3. Análisis de Grafos | Grafo de sensores/subestaciones, centralidades | ✅ Completa |
+| 4. Modelado y Decisión | Granger (P1), recomendación hídrica (P2), ARIMAX (P3) | ✅ Completa |
 
 ## 2. Estructura del repositorio
 
@@ -43,27 +44,24 @@ Challenge_03_Data_Science/
 │   └── processed/                     # Series filtradas, diferenciadas, grafo exportado
 │
 ├── notebooks/
-│   └── challenge03.ipynb              # Notebook único (Fases 1 y 2: geo, estacionariedad, FFT, filtrado)
-│
-├── src/
-│   ├── __init__.py
-│   ├── data_loader.py                 # Carga de CSVs
-│   ├── stationarity.py                # ADF, KPSS, diferenciación
-│   ├── signal_processing.py           # FFT, espectrogramas, filtro Butterworth, RMSE
-│   ├── graph_analysis.py              # Construcción del grafo, centralidades
-│   └── geo_viz.py                     # scatter_mapbox, mapas de calor
+│   └── challenge03.ipynb              # Notebook único: Fases 1 a 4 completas
 │
 ├── results/
-│   ├── figuras/                       # HTML/PNG de gráficas clave
-│   └── diagnostico_estacionariedad_ener.csv   # Tabla ADF/KPSS por variable
+│   ├── figuras/                       # HTML/PNG de gráficas clave (mapas, PSD, grafos, etc.)
+│   ├── figuras_pdf/                   # Versiones estáticas (PNG) usadas en el Informe Técnico
+│   ├── diagnostico_estacionariedad_ener.csv   # Tabla ADF/KPSS por variable
+│   ├── metricas_centralidad.csv       # Degree Centrality / Betweenness por nodo (Fase 3)
+│   └── Challenge_03_Informe_Tecnico.pdf
 │
-├── docs/
-│   ├── Challenge_03_Informe_Tecnico.pdf   # Informe ejecutivo final
-│   └── declaracion_uso_IA.md          # Trazabilidad de uso de IA
-│
-└── assets/
-    └── screenshots/                   # Capturas de mapas, grafos, espectrogramas
+└── docs/
+    ├── Challenge_03_Informe_Tecnico.pdf   # Informe ejecutivo final (copia de entrega)
+    └── declaracion_uso_IA.md          # Trazabilidad de uso de IA
 ```
+
+Se eliminaron las carpetas `src/` y `assets/` que estaban en el scaffolding inicial
+porque, al resolver todo el análisis en un único notebook (`challenge03.ipynb`), no
+llegamos a necesitar módulos de Python separados ni capturas de pantalla aparte —
+mantenerlas vacías solo agregaba ruido a la estructura.
 
 ## 3. Datos
 
@@ -74,9 +72,10 @@ ruido gaussiano inyectado, SNR entre 5-12dB):
   lecturas, variables hídricas (`Agro_1-3`), radiación PAR (`Agro_4`), índices
   bióticos NDVI/Biomasa (`Agro_5-7`), suelo/viento (`Agro_8-10`), más
   `Latitude`, `Longitude`, `Source_Node`, `Target_Node`.
-- `ener_clean.csv` / `ener_noise.csv`: red eléctrica nacional, mercado spot
-  (`Ener_1-3`), generación eólica (`Ener_4`), factores macro (`Ener_5-7`),
-  calidad de potencia (`Ener_8-10`), más geolocalización de subestaciones.
+- `ener_clean.csv` / `ener_noise.csv`: red eléctrica nacional (20 subestaciones,
+  50 nodos de carga), mercado spot (`Ener_1-3`), generación eólica (`Ener_4`),
+  factores macro (`Ener_5-7`), calidad de potencia (`Ener_8-10`), más
+  geolocalización de subestaciones.
 
 ## 4. Cómo reproducir el notebook
 
@@ -114,8 +113,8 @@ ejecutarse desde dentro de `notebooks/`.
   `Ener_8`, `Ener_9`, `Ener_10`.
 - `Ener_5` (Costo del Gas) muestra comportamiento de **Drift** (pendiente
   positiva sostenida en la media móvil de ventana 50), no random walk puro.
-- Esta clasificación debe usarse en las Fases 2-4: diferenciar `Ener_1-3` y
-  `Ener_5-7` antes de correlación de Pearson o modelos ARIMA/ARIMAX.
+- Esta clasificación se usó consistentemente en las Fases 2-4: diferenciar
+  `Ener_1-3` y `Ener_5-7` antes de correlación de Pearson o modelos ARIMA/ARIMAX.
 
 ## 6. Hallazgos de la Fase 2 (Samuel)
 
@@ -142,13 +141,64 @@ ejecutarse desde dentro de `notebooks/`.
   signo de Lag2. El filtrado mejora el error de pronóstico, pero no recupera los
   coeficientes estructurales del modelo.
 
-## 7. Equipo
+## 7. Hallazgos de la Fase 3 (David)
 
+### Tarea 5 — Construcción de la Red de Sensores/Subestaciones
+- Grafos dirigidos por dataset (AGRO: 29 nodos/210 aristas; ENER: 70 nodos/865
+  aristas), ponderados por volumen de lecturas de telemetría.
+- Ambas redes resultaron ser **bipartitas de 2 capas**: `Source_Node` y
+  `Target_Node` son conjuntos disjuntos, así que todo camino tiene longitud 1 y
+  **Betweenness Centrality da 0 en todos los nodos de ambas redes** — hallazgo
+  estructural, no un error de cálculo. Se verificó con un segundo método
+  (Betweenness sobre la versión no dirigida) para confirmar robustez.
+- En AGRO, la red es bipartita **completa** (densidad 100%), así que ni la
+  Degree Centrality distingue nodos — el cuello de botella se determinó por
+  volumen de telemetría: **Nodo 10**.
+- En ENER, tres métricas independientes (Degree Centrality, grado ponderado, y
+  Betweenness no dirigida) coinciden en el mismo nodo: **Nodo 119**, que
+  concentra el 6.0% del tráfico total y alcanza el 98% de las subestaciones
+  destino.
 
-## 8. Declaración de uso de IA
+## 8. Hallazgos de la Fase 4 (Juan Diego + equipo)
+
+### P1 — Causalidad y Redes
+- Causalidad de Granger entre `Ener_10` (Factor de Potencia) y `Ener_9`
+  (Voltaje): una señal inicial en lags 4-5 (p≈0.02) no sobrevivió la
+  verificación independiente con selección de orden VAR (AIC/BIC eligen
+  lag=0) — se trató como falso positivo por comparaciones múltiples.
+  **Conclusión: no hay evidencia robusta de causalidad.**
+- Impacto de red hipotético: el Nodo 119 (mayor centralidad, Fase 3)
+  concentra el mayor riesgo sistémico si esa causalidad existiera, dado que
+  la red no tiene nodos intermedios que contengan la propagación de una falla.
+
+### P2 — Optimización Geo-Agrónoma
+- Filtrado del jitter GPS de `agro_noise` (AWGN de media cero): el error baja
+  de ~900 m por lectura a ~74 m al promediar por sensor.
+- Confirma el clúster de NDVI bajo de la Fase 1 (nodos 14, 5, 1) y aísla al
+  nodo 10. El proxy de pendiente (varianza del viento, `Agro_10`) no explica
+  el NDVI bajo en general (r≈0.05), pero sí identifica al nodo 10 como el de
+  mayor exposición eólica de la red.
+- Recomendación en dos zonas: Zona A (nodos 14, 5, 1) prioridad alta, un solo
+  frente de obra hídrica; Zona B (nodo 10) monitoreo antes de invertir.
+
+### P3 — Analítica Predictiva
+- ARIMAX para la Demanda (`Ener_1`) con Temperatura (`Ener_3`) y Centralidad
+  del nodo de origen (Fase 3) como exógenas, `d=1` (consistente con la
+  clasificación de la Fase 1).
+- **La Centralidad del nodo NO mejora el modelo**: AIC pasa de 8,565.50 (solo
+  Temperatura) a 8,569.41 (agregando Centralidad); el coeficiente no es
+  significativo (p=0.066) y la correlación cruda es prácticamente nula
+  (r=0.015). La estructura de red es valiosa para el análisis de riesgo de
+  propagación de fallas (P1), pero no para este tipo de pronóstico.
+
+## 9. Informe Técnico
+
+El documento ejecutivo con las 5 secciones del checklist (contexto, qué se
+analizó, hallazgos por fase con evidencia gráfica, las 4 Preguntas de
+Validación del checklist respondidas explícitamente, y plan de acción
+priorizado) está en [`docs/Challenge_03_Informe_Tecnico.pdf`](docs/Challenge_03_Informe_Tecnico.pdf).
+
+## 10. Declaración de uso de IA
 
 Ver [`docs/declaracion_uso_IA.md`](docs/declaracion_uso_IA.md).
 
-## 9. Plazo de entrega
-
-07 de febrero de 2026 (23:59 COT).
