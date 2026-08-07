@@ -148,5 +148,3 @@ la IA**.
 ## Formato general
 
 - *"Ajusta la estructura del repositorio a nuestra plantilla de entrega."*
-- *"Genera el README y la declaración de uso de IA con el mismo formato que usamos en el
-  Challenge 02."*
